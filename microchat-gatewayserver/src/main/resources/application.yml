@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: microchat-gateway
+  config:
+    import: configserver:http://microchat-configserver:8071
+

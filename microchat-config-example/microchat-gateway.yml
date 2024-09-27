@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://microchat-eurekaserver:8080/eureka/
+
+spring:
+  cloud:
+    gateway:
+      routes: 
+      - id: microchat-keycloak
+        uri: http://microchat-keycloak:8080/
+        predicates:
+        - Path=/auth/**
+        filters:
+        - RewritePath=/auth/(?<segment>.*), /$\{segment}
+      - id: microchat-messaging
+        uri: lb:ws://microchat-messaging
+        predicates:
+        - Path=/ws/**
+      - id: microchat-friend
+        uri: lb://microchat-friend
+        predicates:
+        - Path=/api/v1/friends/**,/api/v1/friend_requests/**,/api/v1/blocks/**,/api/internal/v1/friends/**
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway

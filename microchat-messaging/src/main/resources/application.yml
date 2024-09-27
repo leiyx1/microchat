@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: microchat-messaging
+  config:
+    import: configserver:http://microchat-configserver:8071

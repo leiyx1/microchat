@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: watup-messaging
+  config:
+    import: configserver:http://configserver:8071

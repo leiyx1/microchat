@@ -1,0 +1,50 @@
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    webclient:
+      enabled: true
+    registerWithEureka: false
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://microchat-eurekaserver:8080/eureka/
+
+server:
+  port: 8080
+
+spring:
+  cloud:
+    openfeign:
+      oauth2:
+        enabled: true
+        clientRegistrationId: admin
+    stream:
+      bindings:
+        friendEvent-in-0:
+          destination: friend-event
+        messageEvent-in-0:
+          destination: message-event
+        message-event:
+          destination: message-event
+      kafka:
+        binder:
+          brokers: broker-1:19092,broker-2:19092,broker-3:19092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://microchat-keycloak:8080/realms/microchat
+      client:
+        registration:
+          admin:
+            provider: kc
+            client-id: admin-cli
+            client-secret: aY9kzw42dM3Hq9xNwduERsvrfoct9tMJ
+            authorization-grant-type: client_credentials
+        provider:
+          kc:
+            issuer-uri: http://microchat-keycloak:8080/realms/microchat
+  data:
+    redis:
+      host: microchat-messaging-redis
+      port: 6379

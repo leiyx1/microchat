@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://microchat-eurekaserver:8080/eureka/
+
+spring:
+  cloud:
+    openfeign:
+      oauth2:
+        enabled: true
+        clientRegistrationId: admin
+    stream:
+      bindings:
+        friend-event:
+          destination: friend-event
+      kafka:
+        binder:
+          brokers: broker-1:19092,broker-2:19092,broker-3:19092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://microchat-keycloak:8080/realms/microchat
+      client:
+        registration:
+          admin:
+            provider: kc
+            client-id: admin-cli
+            client-secret: aY9kzw42dM3Hq9xNwduERsvrfoct9tMJ
+            authorization-grant-type: client_credentials
+        provider:
+          kc:
+            issuer-uri: http://microchat-keycloak:8080/realms/microchat
+  datasource:
+    url: jdbc:postgresql://microchat-friend-postgres:5432/microchat-friend?stringtype=unspecified
+    username: postgres
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
